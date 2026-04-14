@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BookOpenText, Menu, X, UserCircle, Search, Share2, Info, KeyRound, LogOut, LogIn } from 'lucide-react';
 
-export function Navbar() {
+function Navbar() { 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -103,3 +103,5 @@ export function Navbar() {
     </>
   );
 }
+
+export default Navbar

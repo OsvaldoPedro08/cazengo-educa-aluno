@@ -7,7 +7,7 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function ResourceViewer() {
-  const [isLoggedIn] = useState(false); // Simulação: mude para true para permitir download
+  const [isLoggedIn] = useState(true); // Simulação: mude para true para permitir download
   const [showToast, setShowToast] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([
@@ -35,8 +35,6 @@ function ResourceViewer() {
 
   const link = document.createElement('a');
   link.href = resource.url || resource.videoUrl;
-  link.download = resource.titulo;
-  link.click();
 
   const handleDownload = () => {
     if (!isLoggedIn) {
@@ -45,6 +43,8 @@ function ResourceViewer() {
       return;
     }
     window.location.href = resource.url || resource.videoUrl;
+    link.download = resource.titulo;
+    link.click();
   };
 
   const handleAddComment = (e) => {
@@ -102,7 +102,7 @@ function ResourceViewer() {
           <div className="p-6 flex flex-wrap items-center justify-between gap-4 bg-white border-t border-slate-50">
             <div className="flex gap-3">
               <button 
-                onClick={() => window.open(resource.tipo === "video" ? resource.videoUrl : resource.url, "_blank")}
+                onClick={() => window.open(resource.tipo === "video" ? resource.videoUrl : resource.url, "_blank", "noopener, noreferrer")}
                 className="flex items-center gap-2 bg-[#1e2329] text-white px-7 py-3.5 rounded-2xl font-bold text-sm hover:bg-black transition-all shadow-lg shadow-black/10"
               >
                 <ExternalLink size={18} /> Abrir em nova aba

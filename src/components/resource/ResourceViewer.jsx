@@ -105,7 +105,7 @@ function ResourceViewer() {
                 onClick={() => window.open(resource.tipo === "video" ? resource.videoUrl : resource.url, "_blank", "noopener, noreferrer")}
                 className="flex items-center gap-2 bg-[#1e2329] text-white px-7 py-3.5 rounded-2xl font-bold text-sm hover:bg-black transition-all shadow-lg shadow-black/10"
               >
-                <ExternalLink size={18} /> Abrir em nova aba
+                <ExternalLink size={10} /> Abrir em nova aba
               </button>
               
               <button 
@@ -116,7 +116,7 @@ function ResourceViewer() {
                   : 'bg-white border-slate-200 text-slate-400 cursor-pointer hover:border-red-200 hover:text-red-400'
                 }`}
               >
-                <Download size={18} /> Descarregar
+                <Download size={10} /> Descarregar
               </button>
             </div>
           </div>

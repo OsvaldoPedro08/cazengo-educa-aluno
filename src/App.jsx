@@ -7,6 +7,9 @@ import Licenses from "./pages/Licenses"
 import About from "./pages/About"
 import Profile from "./pages/Profile"
 import ResourceViewer from "./components/resource/ResourceViewer"
+import FAQ from "./pages/FAQ"
+import Terms from "./pages/Terms"
+import Politics from "./pages/Politics"
 
 function App() {
   return(
@@ -23,6 +26,9 @@ function App() {
           <Route path="/sobre" element={<About />} />
           <Route path="/perfil" element={<Profile />} />
           <Route path="/recurso/:id" element={<ResourceViewer />} />
+          <Route path="/FAQ" element={<FAQ />} />
+          <Route path="/Termos" element={<Terms />} />
+          <Route path="/Politica" element={<Politics />} />
         </Routes>
       </main>
     </div>

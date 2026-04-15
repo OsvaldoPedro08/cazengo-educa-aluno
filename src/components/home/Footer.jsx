@@ -72,8 +72,8 @@ function Footer() {
                 <li><Link to="/explorar" className="hover:text-white flex items-center gap-2"><ChevronRight className="w-3 h-3"/> Explorar Recursos</Link></li>
                 <li><Link to="/partilhar-recurso" className="hover:text-white flex items-center gap-2"><ChevronRight className="w-3 h-3"/> Partilhar Recurso</Link></li>
                 <li><Link to="/licencas" className="hover:text-white flex items-center gap-2"><ChevronRight className="w-3 h-3"/> Licenças</Link></li>
-                <li><Link to="#" className="hover:text-white flex items-center gap-2"><ChevronRight className="w-3 h-3"/> Sobre o projeto</Link></li>
-                <li><Link to="/partilhar-recurso" className="hover:text-white flex items-center gap-2"><ChevronRight className="w-3 h-3"/> Perguntas Frequentes</Link></li>
+                <li><Link to="/sobre" className="hover:text-white flex items-center gap-2"><ChevronRight className="w-3 h-3"/> Sobre o projeto</Link></li>
+                <li><Link to="/FAQ" className="hover:text-white flex items-center gap-2"><ChevronRight className="w-3 h-3"/> Perguntas Frequentes</Link></li>
               </ul>
             </div>
 
@@ -100,8 +100,8 @@ function Footer() {
           <div className="border-t border-white/5 pt-8 text-center text-white/20 text-[10px] uppercase tracking-widest">
             <p>&copy; {new Date().getFullYear()} Cazengo EDUCA. Todos os direitos reservados.</p>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-white">Termos de Uso</a>
-              <a href="#" className="hover:text-white">Política de Privacidade</a>
+              <a href="/Termos" className="hover:text-white">Termos de Uso</a>
+              <a href="/Politica" className="hover:text-white">Política de Privacidade</a>
             </div>
           </div>
           

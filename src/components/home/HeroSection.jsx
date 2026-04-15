@@ -66,7 +66,7 @@ function HeroSection() {
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-2xl font-bold transition-all"
           >
             <UploadCloud className="w-5 h-5 text-white/60" />
-            Publicar meu Recurso
+            Partilhar meu Recurso
           </button>
         </div>
 

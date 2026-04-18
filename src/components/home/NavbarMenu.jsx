@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BookOpenText, Menu, X, UserCircle, Search, Share2, Info, KeyRound, LogOut, LogIn } from 'lucide-react';
 
 function Navbar() { 
+  const navigate = useNavigate;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -55,7 +56,9 @@ function Navbar() {
                   <span className="font-medium">{user.name.split(' ')[0]}</span>
                 </Link>
                 <button className="text-red-400 hover:text-red-300 transition-colors p-2 rounded-lg hover:bg-red-400/10">
-                  <LogOut className="w-5 h-5" />
+                  <Link to="/login">
+                    <LogOut className="w-5 h-5" />
+                  </Link>
                 </button>
               </div>
             ) : (

@@ -147,7 +147,7 @@ function Footer() {
                 </div>
 
               <div className="space-y-3">
-                    {/* Inputs com fundo cinza ligeiramente mais claro */}
+                    {/* Inputs com fundo cinza claro */}
                     <div className='py-1'>
                         <label className="text-white/60 text-xs font-bold uppercase ml-1 tracking-wider">Seu Nome (Opcional)</label>
                         <div className="relative">

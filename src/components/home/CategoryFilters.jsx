@@ -51,7 +51,7 @@ function CategoryFilters() {
 
   const handleCategoryClick = (categorySlug) => {
     // Navega para explorar passando a categoria como parâmetro de busca (query string)
-    navigate(`/explorar?categoria=${categorySlug}`);
+    navigate(`/explorar?category=${categorySlug}`);
   };
 
   return (
@@ -73,7 +73,7 @@ function CategoryFilters() {
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => handleCategoryClick(cat.slug)}
+              onClick={() => handleCategoryClick(cat.name)}
               className={`group p-8 rounded-3xl border-2 border-slate-100 bg-white transition-all duration-300 text-center flex flex-col items-center hover:shadow-xl hover:-translate-y-1 ${cat.color}`}
             >
               {/* Ícone com fundo colorido suave */}
@@ -89,7 +89,7 @@ function CategoryFilters() {
                 {cat.description}
               </p>
 
-              {/* TODO: Futuramente mostrar aqui o total de recursos da API: "124 recursos" */}
+              {/* Futuramente mostrar aqui o total de recursos da API: "124 recursos" */}
             </button>
           ))}
         </div>

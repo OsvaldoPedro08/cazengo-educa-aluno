@@ -56,7 +56,7 @@ function Profile() {
   };
 
   const handleSaveChanges = () => {
-    // Ativa o Toast Bonito
+    // Ativa o Toast (mensagem de sucesso)
     setShowToast(true);
     setTimeout(() => setShowToast(false), 4000);
     console.log("Dados guardados!");

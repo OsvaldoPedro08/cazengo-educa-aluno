@@ -1,128 +1,149 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Search, Filter, Film, 
   FileText, User, Calendar, ChevronDown,
   LucideBookOpen
 } from 'lucide-react';
 
+// MOCK DATA: Categorias (Futuramente virão da API)
+const MOCK_Categories = [
+  {
+    id: 1, 
+    name: "Ensino Primário"
+  },
+  {
+    id: 2, 
+    name: "Ciências Exatas"
+  },
+  {
+    id: 3, 
+    name: "Línguas e Literatura"
+  },
+  {
+    id: 4, 
+    name: "Ciências Sociais"
+  }
+]
+
+// MOCK DATA: Recursos (Futuramente virão da API)
 const MOCK_RESOURCES = [
   {
     id: 1,
-    titulo: "A Culpa é das Estrelas",
-    descricao: "Um romance que disperta a literatura...",
-    autor: "Prof. Maria dos Santos",
-    data: "12 Abr 2026",
-    categoria: "Literatura",
-    licenca: "CC BY-SA",
-    tipo: "pdf",
+    title: "A Culpa é das Estrelas",
+    description: "Um romance que disperta a literatura...",
+    author: "Prof. Maria dos Santos",
+    date: "12 Abr 2026",
+    category: "Línguas e Literatura",
+    license: "CC BY-SA",
+    type: "pdf",
     url: "/tests/A_Culpa_E_Das_Estrelas.pdf",
     capa: "/tests/culpa_das_estrelas.jpeg",
   },
   {
     id: 2,
-    titulo: "Fracção Mista",
-    descricao: "Vídeo aula sobre fracção mista.",
-    autor: "Prof. Gizz",
-    data: "10 Abr 2026",
-    categoria: "Matemática",
-    licenca: "CC0",
-    tipo: "video",
+    title: "Fracção Mista",
+    description: "Vídeo aula sobre fracção mista.",
+    author: "Prof. Gizz",
+    date: "10 Abr 2026",
+    category: "Ciências Exatas",
+    license: "CC0",
+    type: "video",
     videoUrl: "/tests/fracao_mista.mp4",
   },
   {
     id: 3,
-    titulo: "Material de Apoio para Ingressar à Universidade",
-    descricao: "Um material de apoio com conteúdos sobre Biologia e Química para ingressar à universidade.",
-    autor: "Prof. Isabel António",
-    data: "12 Abr 2026",
-    categoria: "Biologia",
-    licenca: "CC BY-SA",
-    tipo: "pdf",
+    title: "Material de Apoio para Ingressar à Universidade",
+    description: "Um material de apoio com conteúdos sobre Biologia e Química para ingressar à universidade.",
+    author: "Prof. Isabel António",
+    date: "12 Abr 2026",
+    category: "Ciências Sociais",
+    license: "CC BY-SA",
+    type: "pdf",
     url: "/tests/material_de_apoio.pdf",
     capa: "/tests/anatomia.jpg",
   },
   {
     id: 4,
-    titulo: "Como Identificar os Tipos de Vozes",
-    descricao: "Um vídeo explicando sobre como identifcar o tipo de voz.",
-    autor: "Prof. Joana Raimundo",
-    data: "12 Abr 2026",
-    categoria: "Ensino Primário",
-    licenca: "CC0",
-    tipo: "video",
+    title: "Como Identificar os Tipos de Vozes",
+    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
+    author: "Prof. Joana Raimundo",
+    date: "12 Abr 2026",
+    category: "Ensino Primário",
+    license: "CC0",
+    type: "video",
     videoUrl: "/tests/tipo_de_voz.mp4",
   }
   ,
   {
     id: 5,
-    titulo: "Análise de Sistemas",
-    descricao: "Para quem está iniciando Análise de Sistemas, este conteúdo é essencial.",
-    autor: "Prof. Mário Pinto",
-    data: "12 Abr 2026",
-    categoria: "Ensino Médio",
-    licenca: "CC0",
-    tipo: "pdf",
+    title: "Análise de Sistemas",
+    description: "Para quem está iniciando Análise de Sistemas, este conteúdo é essencial.",
+    author: "Prof. Mário Pinto",
+    date: "12 Abr 2026",
+    category: "Ciências Sociais",
+    license: "CC0",
+    type: "pdf",
     url: "/tests/analise_sistemas.pdf",
     capa: "/tests/analise_sistema.jpeg"
   }
   ,
   {
     id: 6,
-    titulo: "Como Identificar os Tipos de Vozes",
-    descricao: "Um vídeo explicando sobre como identifcar o tipo de voz.",
-    autor: "Prof. Joana Raimundo",
-    data: "12 Abr 2026",
-    categoria: "Ensino Primário",
-    licenca: "CC0",
-    tipo: "video",
+    title: "Como Identificar os Tipos de Vozes",
+    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
+    author: "Prof. Joana Raimundo",
+    date: "12 Abr 2026",
+    category: "Ensino Primário",
+    license: "CC0",
+    type: "video",
     videoUrl: "/tests/tipo_de_voz.mp4",
   }
   ,
   {
     id: 7,
-    titulo: "Como Identificar os Tipos de Vozes",
-    descricao: "Um vídeo explicando sobre como identifcar o tipo de voz.",
-    autor: "Prof. Joana Raimundo",
-    data: "12 Abr 2026",
-    categoria: "Ensino Primário",
-    licenca: "CC0",
-    tipo: "video",
+    title: "Como Identificar os Tipos de Vozes",
+    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
+    author: "Prof. Joana Raimundo",
+    date: "12 Abr 2026",
+    category: "Ensino Primário",
+    license: "CC0",
+    type: "video",
     videoUrl: "/tests/tipo_de_voz.mp4",
   }
   ,
   {
     id: 8,
-    titulo: "Como Identificar os Tipos de Vozes",
-    descricao: "Um vídeo explicando sobre como identifcar o tipo de voz.",
-    autor: "Prof. Joana Raimundo",
-    data: "12 Abr 2026",
-    categoria: "Ensino Primário",
-    licenca: "CC0",
-    tipo: "video",
+    title: "Como Identificar os Tipos de Vozes",
+    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
+    author: "Prof. Joana Raimundo",
+    date: "12 Abr 2026",
+    category: "Ensino Primário",
+    license: "CC0",
+    type: "video",
     videoUrl: "/tests/tipo_de_voz.mp4",
   }
   ,
   {
     id: 9,
-    titulo: "Como Identificar os Tipos de Vozes",
-    descricao: "Um vídeo explicando sobre como identifcar o tipo de voz.",
-    autor: "Prof. Joana Raimundo",
-    data: "12 Abr 2026",
-    categoria: "Ensino Primário",
-    licenca: "CC0",
-    tipo: "video",
+    title: "Como Identificar os Tipos de Vozes",
+    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
+    author: "Prof. Joana Raimundo",
+    date: "12 Abr 2026",
+    category: "Ensino Primário",
+    license: "CC0",
+    type: "video",
     videoUrl: "/tests/tipo_de_voz.mp4",
   },
   {
     id: 10,
-    titulo: "Como Identificar os Tipos de Vozes",
-    descricao: "Um vídeo explicando sobre como identifcar o tipo de voz.",
-    autor: "Prof. Joana Raimundo",
-    data: "12 Abr 2026",
-    categoria: "Ensino Primário",
-    licenca: "CC0",
-    tipo: "video",
+    title: "Como Identificar os Tipos de Vozes",
+    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
+    author: "Prof. Joana Raimundo",
+    date: "12 Abr 2026",
+    category: "Ensino Primário",
+    license: "CC0",
+    type: "video",
     videoUrl: "/tests/tipo_de_voz.mp4",
   }
 ];
@@ -134,23 +155,37 @@ function Explore() {
   const [currentPage, setCurrentPage] = useState(1);
   const resourcesPerPage = 7;
 
+  //Pesquisa vindo do Hero Section
+  const [searchParams] = useSearchParams(); //hook para recuperar o parâmetro na URL
+  const searchFromUrl = searchParams.get('pesquisar') || ""; //captura o valor da URL
+
+  //Pesquisa vindo da Category Filters
+  const categoryFromUrl = searchParams.get('category') || "todas"; 
+
   // Estados para Filtros
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchFromUrl);
   const [activeType, setActiveType] = useState("todos");
-  const [activeCategory, setActiveCategory] = useState("todas");
+  const [activeCategory, setActiveCategory] = useState(categoryFromUrl);
+
+  //sincroniza caso a URL mude enquanto o usuario já está na página
+  useEffect(() => {
+    setSearchTerm(searchFromUrl);
+    setActiveCategory(categoryFromUrl)
+  }, [searchFromUrl, categoryFromUrl])
 
   // Lógica de Filtro (Memoizado para performance)
   const filteredResources = useMemo(() => {
     return MOCK_RESOURCES.filter(item => {
-      const matchesSearch = item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            item.autor.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesType = activeType === "todos" || item.tipo === activeType;
-      const matchesCategory = activeCategory === "todas" || item.categoria === activeCategory;
+      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            item.author.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesType = activeType === "todos" || item.type === activeType;
+      const matchesCategory = activeCategory === "todas" || item.category === activeCategory;
       
       return matchesSearch && matchesType && matchesCategory;
     });
   }, [searchTerm, activeType, activeCategory]);
 
+//=====================================================================
   //cálculo para paginação
   const indexOfLastResource = currentPage * resourcesPerPage;
   const indexOfFirstResource = indexOfLastResource - resourcesPerPage;
@@ -161,6 +196,8 @@ function Explore() {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, activeType, activeCategory]);
+
+//=====================================================================
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-20 px-6">
@@ -191,17 +228,17 @@ function Explore() {
           
           {/* Botões de Tipo */}
           <div className="flex flex-wrap justify-center gap-3">
-            {['todos', 'video', 'pdf', 'apresentacao'].map((tipo) => (
+            {['todos', 'video', 'pdf', 'apresentacao'].map((type) => (
               <button 
-                key={tipo}
-                onClick={() => setActiveType(tipo)}
+                key={type}
+                onClick={() => setActiveType(type)}
                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-                  activeType === tipo 
+                  activeType === type 
                   ? 'bg-green-600 text-white shadow-lg shadow-green-200' 
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                {type.charAt(0).toUpperCase() + type.slice(1)}
               </button>
             ))}
           </div>
@@ -225,10 +262,11 @@ function Explore() {
               onChange={(e) => setActiveCategory(e.target.value)}
               className="w-full appearance-none bg-white border border-slate-200 rounded-xl py-3 pl-4 pr-10 font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer shadow-sm"
             >
-              <option value="todas">Todas as Categorias</option>
-              <option value="Matemática">Matemática</option>
-              <option value="História">História</option>
-              <option value="Ciências">Ciências</option>
+              <option value="todas">Selecionar Categoria</option>
+              {MOCK_Categories.map( (cat) => (
+                  <option key={cat.id}>{cat.name}</option>
+                ))
+              }
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none w-5 h-5" />
           </div>
@@ -252,7 +290,7 @@ function Explore() {
               >
                 {/* Media Container */}
                 <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
-                  {item.tipo === "video" ? (
+                  {item.type === "video" ? (
                     <video 
                       src={item.videoUrl} 
                       className="w-full h-full object-cover"
@@ -261,17 +299,17 @@ function Explore() {
                       onMouseOut={e => e.target.pause()}
                     />
                   ) : (
-                    <img src={item.capa} alt={item.titulo} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <img src={item.capa} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   )}
 
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/20">
                     <span className="text-[10px] font-black text-slate-800 uppercase tracking-tighter">
-                      {item.licenca}
+                      {item.license}
                     </span>
                   </div>
 
                   <div className="absolute bottom-4 left-4 bg-slate-900/40 backdrop-blur-md p-2 rounded-xl text-white">
-                    {item.tipo === "video" ? <Film size={16} /> : <FileText size={16} />}
+                    {item.type === "video" ? <Film size={16} /> : <FileText size={16} />}
                   </div>
                 </div>
 
@@ -279,16 +317,16 @@ function Explore() {
                 <div className="p-6 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="bg-green-50 text-green-700 text-[10px] font-black px-2 py-1 rounded-md uppercase">
-                      {item.categoria}
+                      {item.category}
                     </span>
                   </div>
 
                   <h3 className="text-lg font-bold text-slate-900 leading-tight mb-2 group-hover:text-green-600 transition-colors">
-                    {item.titulo}
+                    {item.title}
                   </h3>
                   
                   <p className="text-slate-500 text-sm line-clamp-2 mb-6 flex-1 italic">
-                    {item.descricao}
+                    {item.description}
                   </p>
 
                   <div className="flex items-center justify-between pt-4 border-t border-slate-50">
@@ -296,11 +334,11 @@ function Explore() {
                       <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
                         <User size={14} className="text-slate-400" />
                       </div>
-                      <span className="text-xs font-bold text-slate-700 truncate">{item.autor}</span>
+                      <span className="text-xs font-bold text-slate-700 truncate">{item.author}</span>
                     </div>
                     <div className="flex items-center gap-1 text-slate-400">
                       <Calendar size={12} />
-                      <span className="text-[10px] font-medium">{item.data}</span>
+                      <span className="text-[10px] font-medium">{item.date}</span>
                     </div>
                   </div>
                 </div>
@@ -332,7 +370,7 @@ function Explore() {
             <p className="text-slate-400 font-medium">Nenhum recurso encontrado com estes filtros.</p>
             <div className="flex items-center justify-center gap-1 mt-6">
                 <Filter size={18} className="text-slate-400" />
-                <button onClick={() => {setSearchTerm(""); setActiveType("todos"); setActiveCategory("todas");}} className="ml-2 text-green-600 font-bold underline">Limpar filtros</button>
+                <button onClick={() => {setSearchTerm(""); setActiveType("todos"); setActiveCategory("todas"); navigate("/explorar");}} className="ml-2 text-green-600 font-bold underline">Limpar filtros</button>
             </div>
           </div>
         )}

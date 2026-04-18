@@ -1,22 +1,27 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
   Download, ExternalLink, AlertCircle, MessageSquare, 
   Send, User, Calendar, X, CheckCircle, 
   ArrowLeft
 } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 function ResourceViewer() {
   const [isLoggedIn] = useState(true); // Simulação: mude para true para permitir download
   const [showToast, setShowToast] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([
-    { id: 1, user: "Mateus Pedro", text: "Excelente material! Ajudou-me muito na revisão de álgebra.", date: "Há 2 horas" }
+    { id: 1,
+      user: "Mateus Pedro",
+      text: "Excelente material! Ajudou-me muito na revisão de álgebra.",
+      date: "Há 2 horas"
+    }
   ]);
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  //captura o recurso vindo do explore
+  //captura o recurso vindo do explore (state), caso não existir, procura no mock de recurso (substituir com API)
   const { resource } = location.state || {};
 
   //se o utilizador tentar aceder ao link direto sem clicar num card
@@ -32,6 +37,8 @@ function ResourceViewer() {
         </div>
     );
   }
+
+  console.log(resource)
 
   const link = document.createElement('a');
   link.href = resource.url || resource.videoUrl;

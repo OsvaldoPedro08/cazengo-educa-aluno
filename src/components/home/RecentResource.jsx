@@ -8,65 +8,65 @@ function RecentResource() {
   // MOCK DATA: Recursos (TODO: Estes dados virão do fetch para a tua API /api/resources)
   const resources = [
     {
-      id: "res-001",
-      title: "Sebenta de Matemática - 9ª Classe",
-      description: "Exercícios resolvidos sobre equações do 2º grau e geometria plana.",
-      author: "Prof. Manuel José",
+      id: 1,
+      title: "A Culpa é das Estrelas",
+      description: "Um romance que disperta a literatura...",
+      author: "Prof. Maria dos Santos",
       date: "12 Abr 2026",
-      license: "CC0",
-      downloads: 452,
-      category: "Ciências Exatas"
-    },
-    {
-      id: "res-002",
-      title: "História de N'dalatando: Origens",
-      description: "Documento detalhado sobre a fundação e evolução da cidade sede de Cuanza Norte.",
-      author: "Dra. Maria Antónia",
-      date: "10 Abr 2026",
-      license: "CC BY",
-      downloads: 128,
-      category: "História"
-    },
-    {
-      id: "res-003",
-      title: "Guia de Alfabetização em Kimbundu",
-      description: "Material de apoio para o ensino primário focado em línguas nacionais.",
-      author: "Instituto de Línguas",
-      date: "08 Abr 2026",
+      category: "Línguas e Literatura",
       license: "CC BY-SA",
-      downloads: 89,
-      category: "Línguas"
+      tipo: "pdf",
+      url: "/tests/A_Culpa_E_Das_Estrelas.pdf",
+      capa: "/tests/culpa_das_estrelas.jpeg",
     },
     {
-      id: "res-004",
-      title: "Ficha de Leitura - Língua Portuguesa 5ª Classe",
-      description: "Conjunto de 20 fichas de leitura com textos adaptados ao contexto angolano e exercícios d...",
-      author: "Prof. Maria da Conceição",
-      date: "02 Jan 2026",
-      license: "CC BY-SA",
-      downloads: 103,
-      category: "Línguas"
-    },
-    {
-      id: "res-005",
-      title: "Guia Completo de Matemática - 8ª Classe",
-      description: "Material didáctico com exercícios resolvidos de álgebra, geometria e aritmética para a 8ª classe.",
-      author: "Prof. António Sebastião",
-      date: "13 Abr 2026",
-      license: "CC BY",
-      downloads: 75,
-      category: "Matemática"
-    },
-    {
-      id: "res-006",
-      title: "História de Angola - Da Independência à Actualidade",
-      description: "Apresentação com linha temporal dos principais eventos da história angolana desde 1975.",
-      author: "Prof. João Mateus",
-      date: "20 Fev 2026",
-      license: "CC BY-SA",
-      downloads: 128,
-      category: "História"
-    }
+    id: 2,
+    title: "Fracção Mista",
+    description: "Vídeo aula sobre fracção mista.",
+    author: "Prof. Gizz",
+    date: "10 Abr 2026",
+    category: "Ciências Exatas",
+    license: "CC0",
+    type: "video",
+    videoUrl: "/tests/fracao_mista.mp4",
+  },
+  {
+    id: 3,
+    title: "Material de Apoio para Ingressar à Universidade",
+    description: "Um material de apoio com conteúdos sobre Biologia e Química para ingressar à universidade.",
+    author: "Prof. Isabel António",
+    date: "12 Abr 2026",
+    category: "Ciências Sociais",
+    license: "CC BY-SA",
+    type: "pdf",
+    url: "/tests/material_de_apoio.pdf",
+    capa: "/tests/anatomia.jpg",
+  },
+  {
+    id: 4,
+    title: "Como Identificar os Tipos de Vozes",
+    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
+    author: "Prof. Joana Raimundo",
+    date: "12 Abr 2026",
+    category: "Ensino Primário",
+    license: "CC0",
+    type: "video",
+    videoUrl: "/tests/tipo_de_voz.mp4",
+  }
+  ,
+  {
+    id: 5,
+    title: "Análise de Sistemas",
+    description: "Para quem está iniciando Análise de Sistemas, este conteúdo é essencial.",
+    author: "Prof. Mário Pinto",
+    date: "12 Abr 2026",
+    category: "Ciências Sociais",
+    license: "CC0",
+    type: "pdf",
+    url: "/tests/analise_sistemas.pdf",
+    capa: "/tests/analise_sistema.jpeg"
+  }
+  
   ];
 
   return (
@@ -92,7 +92,7 @@ function RecentResource() {
           {resources.map((res) => (
             <div 
               key={res.id}
-              onClick={() => navigate(`/recurso/${res.id}`)} // TODO: Leva para ResourceViewer.jsx
+              onClick={() => navigate(`/recurso/${res.id}`, {state: {resource : res} })} // TODO: Leva para ResourceViewer.jsx
               className="group bg-white rounded-3xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-green-200 transition-all cursor-pointer relative flex flex-col h-full"
             >
               {/* Badge da Licença (Canto Superior Direito) */}

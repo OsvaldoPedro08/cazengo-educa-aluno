@@ -47,7 +47,7 @@ function About() {
             Sobre o Cazengo EDUCA
           </h1>
           <p className="text-slate-400 text-lg leading-relaxed">
-            Uma plataforma dedicada à partilha de recursos educativos abertos entre a comunidade acadêmica do município de Cazengo, Cuanza Norte.
+            Uma plataforma dedicada à partilha de recursos educacionais abertos entre a comunidade acadêmica do município de Cazengo, Cuanza Norte.
           </p>
         </div>
       </div>

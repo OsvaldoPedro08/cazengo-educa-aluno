@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Book, Search, UploadCloud, GraduationCap } from 'lucide-react';
 
 function HeroSection() {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("")
 
   // Função para lidar com a pesquisa
   const handleSearch = (e) => {
-    e.preventDefault();
-    // TODO: Capturar o valor do input e passar via query string
-    navigate('/explorar'); 
+    
+    e.preventDefault(); //impede a atualização/refresh da página
+
+    if(!searchTerm.trim()) {
+      return
+    }
+
+    navigate(`/explorar?pesquisar=${searchTerm}`); 
   };
 
   return (
@@ -44,6 +50,8 @@ function HeroSection() {
               type="text" 
               placeholder="Pesquisar: Matemática 8ª classe..." 
               className="bg-transparent border-none outline-none text-white w-full placeholder:text-white/30"
+              value={searchTerm}
+              onChange={ (e) => setSearchTerm(e.target.value) }
             />
           </div>
           <button type="submit" className="bg-green-500 hover:bg-green-400 text-[#0d1f17] font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-green-500/20">

@@ -16,7 +16,7 @@ export function Publish() {
   const [formData, setFormData] = useState({
     titulo: "",
     descricao: "",
-    categoria: "Ciências Exatas",
+    categoria: "Ensino Primário",
     disciplina: "",
     classe: "",
     licenca_id: "1",
@@ -171,16 +171,6 @@ export function Publish() {
               <div className="relative">
                 <User className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
                 <input required name="autor_nome" onChange={handleInputChange} type="text" placeholder="Nome Completo" className="w-full bg-white border border-slate-200 rounded-lg py-2.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-green-500 outline-none" />
-              </div>
-
-              <div className="flex flex-col gap-2 mt-4">
-                <label className="text-slate-500 font-bold text-[10px] uppercase tracking-widest block tracking-tight">Escola</label>
-                <select required name="escola" onChange={handleInputChange} className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none bg-white">
-                    <option>Escola Missionária Santa Maria Goretti</option>
-                    <option>ITS - Instituto Médio de Saúde</option>
-                    <option>Colégio Pitágoras</option>
-                    <option>Escola Missionária São João Baptista</option>
-                </select>
               </div>
             </div>
 

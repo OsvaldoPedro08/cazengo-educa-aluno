@@ -14,15 +14,15 @@ const MOCK_Categories = [
   },
   {
     id: 2, 
-    name: "Ciências Exatas"
+    name: "Ensino Secundário"
   },
   {
     id: 3, 
-    name: "Línguas e Literatura"
+    name: "Ensino Médio"
   },
   {
     id: 4, 
-    name: "Ciências Sociais"
+    name: "Ensino Superior"
   }
 ]
 
@@ -34,7 +34,7 @@ const MOCK_RESOURCES = [
     description: "Um romance que disperta a literatura...",
     author: "Prof. Maria dos Santos",
     date: "12 Abr 2026",
-    category: "Línguas e Literatura",
+    category: "Ensino Médio",
     license: "CC BY-SA",
     type: "pdf",
     url: "/tests/A_Culpa_E_Das_Estrelas.pdf",
@@ -262,7 +262,7 @@ function Explore() {
               onChange={(e) => setActiveCategory(e.target.value)}
               className="w-full appearance-none bg-white border border-slate-200 rounded-xl py-3 pl-4 pr-10 font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer shadow-sm"
             >
-              <option value="todas">Selecionar Categoria</option>
+              <option value="todas">Todos os Níveis</option>
               {MOCK_Categories.map( (cat) => (
                   <option key={cat.id}>{cat.name}</option>
                 ))

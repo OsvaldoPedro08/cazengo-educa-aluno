@@ -13,7 +13,7 @@ function RecentResource() {
       description: "Um romance que disperta a literatura...",
       author: "Prof. Maria dos Santos",
       date: "12 Abr 2026",
-      category: "Línguas e Literatura",
+      category: "Ensino Médio",
       license: "CC BY-SA",
       tipo: "pdf",
       url: "/tests/A_Culpa_E_Das_Estrelas.pdf",

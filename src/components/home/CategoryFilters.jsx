@@ -19,33 +19,33 @@ function CategoryFilters() {
     },
     { 
       id: 2, 
-      name: "Ciências Exatas", 
-      description: "Matemática, Física, Química, etc", 
+      name: "Ensino Secundário", 
+      description: "7ª à 9ª Classe", 
       icon: Atom, 
       color: "hover:border-blue-400", 
       iconBg: "bg-blue-50", 
       iconColor: "text-blue-500",
-      slug: "ciencias_exatas"
+      slug: "ensino_secundario"
     },
     { 
       id: 3, 
-      name: "Línguas e Literatura", 
-      description: "Português, Inglês, Kimbundu, etc", 
+      name: "Ensino Médio", 
+      description: "10ª à 13ª Classe", 
       icon: BookText, 
       color: "hover:border-green-400", 
       iconBg: "bg-green-50", 
       iconColor: "text-green-500",
-      slug: "linguas"
+      slug: "ensino_medio"
     },
     { 
       id: 4, 
-      name: "Ciências Sociais", 
-      description: "História, Geografia, Sociologia, etc", 
+      name: "Ensino Superior", 
+      description: "Iº Ano em diante", 
       icon: MapPin, 
       color: "hover:border-red-400", 
       iconBg: "bg-red-50", 
       iconColor: "text-red-500",
-      slug: "ciencias_sociais"
+      slug: "ensino_superior"
     }
   ];
 

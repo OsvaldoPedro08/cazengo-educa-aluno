@@ -100,8 +100,12 @@ function Footer() {
           <div className="border-t border-white/5 pt-8 text-center text-white/20 text-[10px] uppercase tracking-widest">
             <p>&copy; {new Date().getFullYear()} Cazengo EDUCA. Todos os direitos reservados.</p>
             <div className="flex gap-6">
-              <a href="/Termos" className="hover:text-white">Termos de Uso</a>
-              <a href="/Politica" className="hover:text-white">Política de Privacidade</a>
+              <Link to="/Termos">
+                <a className="hover:text-white">Termos de Uso</a>
+              </Link>
+              <Link to="/Politica">
+                <a className="hover:text-white">Política de Privacidade</a>
+              </Link>
             </div>
           </div>
           

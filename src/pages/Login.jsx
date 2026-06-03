@@ -82,10 +82,11 @@ function Login() {
     try {
           const response = await api.post('/Cazengo-Educa/api/login', loginData);
 
-          const { user } = response.data;
+          const { user, token } = response.data;
 
           //guarda os dados do usuario no armazenamento local do browser
           localStorage.setItem('@CazengoEduca:user', JSON.stringify(user));
+          localStorage.setItem('token', token)
 
           //verifica se o usuario é admin! se for, nao permite logar
           if(user.type_user === 'Admin') {

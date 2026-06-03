@@ -2,45 +2,56 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   BookOpenText, Facebook, Star, Send, X, User, Mail, 
-  Tag, Phone, MapPin, ChevronRight, MessageSquare 
+  Tag, Phone, MapPin, ChevronRight, MessageSquare, 
+  CheckCircle2
 } from 'lucide-react';
+import api from '../../services/api';
 
 function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const [toast, setToast] = useState({ show: false, message: ""});
+
   const [formData, setFormData] = useState({
-    nome: "", 
-    assunto: "Sugestão", 
-    mensagem: ""
+    rate: "",
+    name: "", 
+    topic: "Sugestão de Melhoria", 
+    message: ""
   });
 
   const ratingLabels = {
     1: "Mau", 2: "Razoável", 3: "Bom", 4: "Muito Bom", 5: "Excelente"
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const showToast = (msg) => {
+    setToast({ show: true, message: msg });
+    setTimeout(() => setToast({ show: false, message: "" }), 5000);
   };
 
-  const triggerToast = (message, type = "success") => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: "", type: "success" }), 5000);
-  };
-
-  const handleSendFeedback = (e) => {
+  const handleSendFeedback = async (e) => {
+    
     e.preventDefault();
     
-    const feedbackCompleto = { ...formData, estrelas: rating, data: new Date().toISOString() };
+    try {
+          if(formData.name === "") {
+            formData.name = "Anônimo";
+          }
+          const newFeedback = { 
+            ...formData,
+            rate: rating
+          };
+
+          await api.post('/Cazengo-Educa/api/avaliacao/novo', newFeedback)
+          
+          showToast("A sua avaliação foi enviada com sucesso.");
     
-    console.log("Feedback para API:", feedbackCompleto);
-    
-    //triggerToast("")
-    alert("Obrigado, " + formData.nome + "! A sua avaliação foi enviada com sucesso.");
-    
-    setIsModalOpen(false);
-    setRating(0);
-    setFormData({ nome: "", assunto: "Sugestão", mensagem: "" });
+          setIsModalOpen(false);
+          setRating(0);
+          setFormData({ name: "", topic: "Sugestão de Melhoria", message: "" });
+
+    } catch (error) {
+      showToast("Erro ao conectar-se com o servidor!")
+    }
   };
 
   return (
@@ -81,8 +92,8 @@ function Footer() {
             <div className="space-y-4">
               <h4 className="text-sm font-bold text-green-500 uppercase tracking-widest">Links</h4>
               <ul className="space-y-2 text-white/50 text-sm">
-                <li><Link to="https://creativecommons.org.licenses/by-sa/4.0/deed.pt" className="hover:text-white">CC BY-SA 4.0</Link></li>
-                <li><Link to="https://creativecommons.org.licenses/by/4.0/legalcode.pt" className="hover:text-white">CC BY 4.0</Link></li>
+                <li><Link to="https://creativecommons.org/licenses/by-sa/4.0/deed.pt" className="hover:text-white">CC BY-SA 4.0</Link></li>
+                <li><Link to="https://creativecommons.org/licenses/by/4.0/legalcode.pt" className="hover:text-white">CC BY 4.0</Link></li>
               </ul>
             </div>
 
@@ -100,11 +111,11 @@ function Footer() {
           <div className="border-t border-white/5 pt-8 text-center text-white/20 text-[10px] uppercase tracking-widest">
             <p>&copy; {new Date().getFullYear()} Cazengo EDUCA. Todos os direitos reservados.</p>
             <div className="flex gap-6">
-              <Link to="/Termos">
-                <a className="hover:text-white">Termos de Uso</a>
+              <Link to="/Termos" className="hover:text-white">
+                Termos de Uso
               </Link>
-              <Link to="/Politica">
-                <a className="hover:text-white">Política de Privacidade</a>
+              <Link to="/Politica" className="hover:text-white">
+                Política de Privacidade
               </Link>
             </div>
           </div>
@@ -124,7 +135,6 @@ function Footer() {
       {/* --- MODAL DE AVALIAÇÃO --- */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          {/* Fundo Cinza Antracite conforme imagem */}
           <div className="bg-[#1e2329] border border-white/5 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
             
             <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-white/20 hover:text-white"><X className="w-5 h-5"/></button>
@@ -151,12 +161,17 @@ function Footer() {
                 </div>
 
               <div className="space-y-3">
-                    {/* Inputs com fundo cinza claro */}
+                    {/* Inputs */}
                     <div className='py-1'>
                         <label className="text-white/60 text-xs font-bold uppercase ml-1 tracking-wider">Seu Nome (Opcional)</label>
                         <div className="relative">
                         <User className="absolute left-3 top-3 w-4 h-4 text-white/20" />
-                        <input name="nome" type="text" value={formData.nome} onChange={handleChange} placeholder="Ex: Osvaldo Pedro" className="w-full bg-[#2b3139] border border-white/5 rounded-lg py-2.5 pl-10 pr-4 text-sm text-white focus:border-yellow-500/50 outline-none transition-all placeholder:text-white/20" />
+                        <input  
+                          value={formData.name} 
+                          onChange={e => setFormData({...formData, name: e.target.value})} 
+                          placeholder="Ex: Osvaldo Pedro" 
+                          className="w-full bg-[#2b3139] border border-white/5 rounded-lg py-2.5 pl-10 pr-4 text-sm text-white focus:border-yellow-500/50 outline-none transition-all placeholder:text-white/20" 
+                        />
                         </div>
                     </div>
 
@@ -164,18 +179,30 @@ function Footer() {
                         <label className="text-white/60 text-xs font-bold uppercase ml-1 tracking-wider">Assunto do Feedback</label>
                         <div className="relative">
                         <Tag className="absolute left-3 top-3 w-4 h-4 text-white/20" />
-                        <select name="assunto" value={formData.assunto} onChange={handleChange} className="w-full bg-[#2b3139] border border-white/5 rounded-lg py-2.5 pl-10 pr-4 text-sm text-white focus:border-yellow-500/50 outline-none appearance-none cursor-pointer">
-                            <option value="Sugestão">Sugestão de Melhoria</option>
-                            <option value="Erro no Sistema">Reportar Erro / Bug</option>
-                            <option value="Elogio">Elogio à Plataforma</option>
-                            <option value="Dúvida">Dúvida Técnica</option>
+                        <select 
+                          value={formData.topic}
+                          onChange={e => setFormData({...formData, topic: e.target.value})}
+                          className="w-full bg-[#2b3139] border border-white/5 rounded-lg py-2.5 pl-10 pr-4 text-sm text-white focus:border-yellow-500/50 outline-none appearance-none cursor-pointer"
+                        >
+                            <option value="Sugestão de Melhoria">Sugestão de Melhoria</option>
+                            <option value="Reportar Erro / Bug">Reportar Erro / Bug</option>
+                            <option value="Elogio à Plataforma">Elogio à Plataforma</option>
+                            <option value="Dúvida Técnica">Dúvida Técnica</option>
                         </select>
                         </div>
                     </div>
 
                     <div>
                         <label className="text-white/60 text-xs font-bold uppercase ml-1 tracking-wider">Mensagem</label>
-                        <textarea required name='mensagem' value={formData.mensagem} onChange={handleChange} placeholder="Sua mensagem..." className="w-full bg-[#2b3139] border border-white/5 rounded-lg p-3 text-sm text-white focus:border-yellow-500/50 outline-none h-24 resize-none placeholder:text-white/20"></textarea>
+                        <textarea 
+                          required
+                          value={formData.message} 
+                          onChange={e => setFormData({...formData, message: e.target.value})} 
+                          placeholder="Sua mensagem..."
+                          className="w-full bg-[#2b3139] border border-white/5 rounded-lg p-3 text-sm text-white focus:border-yellow-500/50 outline-none h-24 resize-none placeholder:text-white/20"
+                        >
+
+                        </textarea>
                     </div>
               </div>
 
@@ -186,6 +213,15 @@ function Footer() {
           </div>
         </div>
       )}
+
+      {/* TOAST NOTIFICAÇÃO */}
+      {toast.show && (
+        <div className="fixed bottom-8 left-8 bg-slate-900 text-white px-6 py-4 rounded-2xl flex items-center gap-3 shadow-2xl animate-in slide-in-from-left-10 duration-300 z-[200]">
+          <CheckCircle2 className="text-green-400" size={20} />
+          <span className="font-bold">{toast.message}</span>
+        </div>
+      )}
+
     </>
   );
 }

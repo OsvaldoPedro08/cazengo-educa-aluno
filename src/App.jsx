@@ -12,9 +12,10 @@ import Terms from "./pages/Terms"
 import Politics from "./pages/Politics"
 import { useState } from "react"
 import Login from "./pages/Login"
+import { userAuthUser } from "./hooks/userAuth"
 
 function App() {
-  const [user, setUser] = useState(null); //caso nao fez login
+  const { user, setUser } = userAuthUser();
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
 
@@ -32,10 +33,12 @@ function App() {
           <Route path="/" element={<Home isLoggedIn={!!user} />} />
 
           {/* Mostra o botao de perfil com o nome apenas quando o usuario faz login */}
-          <Route path="/perfil" element={user ? <Profile user={user} setUser={setUser} /> : <Navigate to="/login" />} />
+          <Route path="/perfil" element={user ? <Profile user={user} setUser={setUser} /> : <Navigate to="/login" replace/>} />
 
           {/* Rotas mostradas em todos usuarios */}
           <Route path="/explorar" element={<Explore />} />
+          
+          {/* ROTA DE PARTILHAR RECURSO PROTEGIDA */}
           <Route path="/partilhar-recurso" element={<Publish />} />
           <Route path="/licencas" element={<Licenses />} />
           <Route path="/sobre" element={<About />} />

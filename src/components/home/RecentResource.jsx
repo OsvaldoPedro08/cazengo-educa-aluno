@@ -1,73 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Download, ArrowRight, Calendar, User, Shield } from 'lucide-react';
+import { FileText, Download, ArrowRight, Calendar, User, Shield, GraduationCapIcon, Book, LucideAlignEndHorizontal, Film } from 'lucide-react';
+import api from '../../services/api';
 
 function RecentResource() {
   const navigate = useNavigate();
 
-  // MOCK DATA: Recursos (TODO: Estes dados virão do fetch para a tua API /api/resources)
-  const resources = [
-    {
-      id: 1,
-      title: "A Culpa é das Estrelas",
-      description: "Um romance que disperta a literatura...",
-      author: "Prof. Maria dos Santos",
-      date: "12 Abr 2026",
-      category: "Ensino Médio",
-      license: "CC BY-SA",
-      tipo: "pdf",
-      url: "/tests/A_Culpa_E_Das_Estrelas.pdf",
-      capa: "/tests/culpa_das_estrelas.jpeg",
-    },
-    {
-    id: 2,
-    title: "Fracção Mista",
-    description: "Vídeo aula sobre fracção mista.",
-    author: "Prof. Gizz",
-    date: "10 Abr 2026",
-    category: "Ciências Exatas",
-    license: "CC0",
-    type: "video",
-    videoUrl: "/tests/fracao_mista.mp4",
-  },
-  {
-    id: 3,
-    title: "Material de Apoio para Ingressar à Universidade",
-    description: "Um material de apoio com conteúdos sobre Biologia e Química para ingressar à universidade.",
-    author: "Prof. Isabel António",
-    date: "12 Abr 2026",
-    category: "Ciências Sociais",
-    license: "CC BY-SA",
-    type: "pdf",
-    url: "/tests/material_de_apoio.pdf",
-    capa: "/tests/anatomia.jpg",
-  },
-  {
-    id: 4,
-    title: "Como Identificar os Tipos de Vozes",
-    description: "Um vídeo explicando sobre como identifcar o tipo de voz.",
-    author: "Prof. Joana Raimundo",
-    date: "12 Abr 2026",
-    category: "Ensino Primário",
-    license: "CC0",
-    type: "video",
-    videoUrl: "/tests/tipo_de_voz.mp4",
-  }
-  ,
-  {
-    id: 5,
-    title: "Análise de Sistemas",
-    description: "Para quem está iniciando Análise de Sistemas, este conteúdo é essencial.",
-    author: "Prof. Mário Pinto",
-    date: "12 Abr 2026",
-    category: "Ciências Sociais",
-    license: "CC0",
-    type: "pdf",
-    url: "/tests/analise_sistemas.pdf",
-    capa: "/tests/analise_sistema.jpeg"
-  }
-  
-  ];
+  const [resources, setResources] = useState([]);
+
+  useEffect(() => {
+    const loadResources = async () => {
+      try {
+            const response = await api.get('/Cazengo-Educa/api/recursos/recentes');
+            setResources(response.data);
+      } catch (error) {
+        
+      }
+    }
+
+    loadResources();
+  }, []);
 
   return (
     <section className="w-full bg-slate-50 py-20 px-6">
@@ -89,48 +41,73 @@ function RecentResource() {
 
         {/* Grid de Recursos */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {resources.map((res) => (
+          {resources.map((item) => (
             <div 
-              key={res.id}
-              onClick={() => navigate(`/recurso/${res.id}`, {state: {resource : res} })} // TODO: Leva para ResourceViewer.jsx
-              className="group bg-white rounded-3xl border border-slate-200 p-6 shadow-sm hover:shadow-xl hover:border-green-200 transition-all cursor-pointer relative flex flex-col h-full"
+              key={item.idresource}
+              onClick={() => navigate(`/recurso/${item.idresource}`, { state: { resource: item } })}
+              className="group flex flex-col bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:shadow-slate-200 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
             >
-              {/* Badge da Licença (Canto Superior Direito) */}
-              <div className="absolute top-4 right-4 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1 uppercase">
-                <Shield className="w-3 h-3" />
-                {res.license} {/* Dinâmico do Banco de Dados */}
-              </div>
+              {/* Media Container (Capa ou Vídeo) */}
+              <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                {item.type_resource === "Video" ? (
+                  <video 
+                    src={`${item.url_resource}`} 
+                    className="w-full h-full object-cover"
+                    muted
+                    onMouseOver={e => e.target.play()}
+                    onMouseOut={e => e.target.pause()}
+                  />
+                ) : (
+                  <img 
+                    src={item.cover_url ? (item.cover_url.startsWith('http') ? item.cover_url : `${item.cover_url}`) : ""} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                  />
+                )}
 
-              {/* Ícone e Título */}
-              <div className="mb-4">
-                <div className="bg-slate-100 w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-500 transition-colors">
-                  <FileText className="text-slate-600 group-hover:text-white w-6 h-6" />
+                {/* Distintivo de Licença Aberta (REA) */}
+                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/20">
+                  <span className="text-[10px] font-black text-slate-800 uppercase tracking-tighter">
+                    {item.license || "REA"}
+                  </span>
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 group-hover:text-green-600 transition-colors line-clamp-2">
-                  {res.title}
-                </h3>
+
+                {/* Ícone Indicador do Tipo de Ficheiro */}
+                <div className="absolute bottom-4 left-4 bg-slate-900/40 backdrop-blur-md p-2 rounded-xl text-white">
+                  {item.type_resource === "Video" ? <Film size={16} /> : <FileText size={16} />}
+                </div>
               </div>
 
-              <p className="text-slate-500 text-sm mb-6 line-clamp-3 flex-grow">
-                {res.description}
-              </p>
+              {/* Bloco de Conteúdo Textual */}
+              <div className="p-6 flex flex-col flex-1">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-green-50 text-green-700 text-[10px] font-black px-2 py-1 rounded-md uppercase">
+                    {item.level}
+                  </span>
+                </div>
 
-              {/* Info de Rodapé do Card */}
-              <div className="border-t border-slate-100 pt-4 mt-auto">
-                <div className="flex items-center justify-between text-slate-400 text-xs">
-                  <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-1">
-                      <User className="w-3 h-3" /> {res.author}
+                <h3 className="text-lg font-bold text-slate-900 leading-tight mb-2 group-hover:text-green-600 transition-colors line-clamp-2">
+                  {item.title}
+                </h3>
+                
+                <p className="text-slate-500 text-sm line-clamp-2 mb-6 flex-1 italic">
+                  {item.description}
+                </p>
+
+                {/* Meta-dados Rodapé (Autor e Data) */}
+                <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                  <div className="flex items-center gap-2 max-w-[70%]">
+                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 flex-shrink-0">
+                      <User size={14} className="text-slate-400" />
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" /> {res.date}
-                    </div>
+                    <span className="text-xs font-bold text-slate-700 truncate">
+                      {item.actor || "Desconhecido"}
+                    </span>
                   </div>
-
-                  {/* Número de Downloads (Canto Inferior Direito) */}
-                  <div className="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded-md font-medium text-slate-600">
-                    <Download className="w-3 h-3" />
-                    {res.downloads}
+                  <div className="flex items-center gap-1 text-slate-400 flex-shrink-0">
+                    <Calendar size={12} />
+                    <span className="text-[10px] font-medium">
+                      {item.dtregister ? new Date(item.dtregister).toLocaleDateString('pt-PT') : 'Recente'}
+                    </span>
                   </div>
                 </div>
               </div>

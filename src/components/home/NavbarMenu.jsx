@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BookOpenText, Menu, X, UserCircle, Search, Share2, Info, KeyRound, LogOut, LogIn } from 'lucide-react';
+import { userAuthUser } from '../../hooks/userAuth';
 
 function Navbar() { 
+
   const navigate = useNavigate;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const[name , setName] = useState("")
 
-  // --- MOCK DATA (Para ligar à API depois) ---
-  const user = {
-    isLoggedIn: true, // TODO: Mudar para false para testar o botão "Entrar"
-    name: "Osvaldo Pedro"
-  };
+  // usuário autenticado
+  const { user } = userAuthUser();
+
+  //terminar sessao
+  const handleLogout = () => {
+
+    //limpar os dados do usuario sensíveis do navegador
+    localStorage.removeItem('@CazengoEduca:user');
+    try {
+          navigate('/login', { replace: true});
+    } catch (error) {
+      showToast("Erro ao terminar sessão!");
+    }
+  }
 
   const isActive = (path) => location.pathname === path;
 
@@ -28,7 +40,7 @@ function Navbar() {
             <span className="text-white text-xl font-bold">Cazengo <span className="text-white/50 font-medium">EDUCA</span></span>
           </Link>
 
-          {/* Links Desktop - Apenas Aluno/Professor */}
+          {/* Links Desktop */}
           <div className="hidden lg:flex items-center gap-2">
             <Link to="/" className={`px-4 py-2 rounded-xl transition-all ${isActive('/') ? 'text-green-400 bg-white/5' : 'text-white/70 hover:text-white hover:bg-white/5'}`}>
               Início
@@ -49,17 +61,21 @@ function Navbar() {
 
           {/* Autenticação */}
           <div className="hidden lg:flex items-center gap-4">
-            {user.isLoggedIn ? (
+            {user ? (
               <div className="flex items-center gap-4">
-                <Link to="/perfil" className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
-                  <UserCircle className="w-6 h-6 text-green-500" />
-                  <span className="font-medium">{user.name.split(' ')[0]}</span>
-                </Link>
-                <button className="text-red-400 hover:text-red-300 transition-colors p-2 rounded-lg hover:bg-red-400/10">
-                  <Link to="/login">
-                    <LogOut className="w-5 h-5" />
+                <div>
+                  <Link to="/perfil" className="flex items-center gap-2 text-white/90 hover:text-white transition-colors">
+                    <UserCircle className="w-6 h-6 text-green-500" />
+                    <span className="font-medium">{user.name.split(' ')[0]}</span>
                   </Link>
-                </button>
+                </div>
+                
+                <div>
+                  <button onClick={handleLogout} className="text-red-400 hover:text-red-300 transition-colors p-2 rounded-lg hover:bg-red-400/10">
+                    <LogOut className="w-5 h-5" />
+                  </button>
+                </div>
+                
               </div>
             ) : (
               <Link to="/login" className="bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2">
@@ -75,7 +91,7 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* --- MENU MOBILE (Offcanvas) --- */}
+      {/* --- MENU MOBILE --- */}
       <div className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] transition-all duration-300 lg:hidden ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsMenuOpen(false)} />
       
       <div className={`fixed top-0 right-0 h-full w-72 bg-[#0d1f17] z-[70] p-6 transform transition-all duration-300 ease-in-out lg:hidden border-l border-white/5 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
@@ -92,7 +108,7 @@ function Navbar() {
           <Link to="/sobre" onClick={() => setIsMenuOpen(false)} className={`p-4 rounded-xl flex items-center gap-3 transition-all ${isActive('/sobre') ? 'bg-green-600/10 text-green-400' : 'text-white/70 hover:bg-white/5'}`}><Info className="w-5 h-5"/> Sobre Cazengo</Link>
           
           <div className="mt-8 pt-8 border-t border-white/5">
-            {user.isLoggedIn ? (
+            {user ? (
               <div className="space-y-2">
                 <Link to="/perfil" onClick={() => setIsMenuOpen(false)} className="text-white p-4 bg-white/5 rounded-xl flex items-center gap-3 w-full"><UserCircle className="w-5 h-5 text-green-500"/> Meu Perfil</Link>
                 <button className="w-full text-red-400 p-4 flex items-center gap-3 hover:bg-red-400/5 rounded-xl transition-all"><LogOut className="w-5 h-5"/> Sair</button>
@@ -107,4 +123,4 @@ function Navbar() {
   );
 }
 
-export default Navbar
+export default Navbar;

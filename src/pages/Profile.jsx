@@ -4,14 +4,8 @@ import {
   User, Mail, Phone, School, Briefcase, FileText, 
   Save, LogOut, ChevronDown, Bell, CheckCircle, Clock, AlertCircle 
 } from 'lucide-react';
-
-const SCHOOLS_MOCK = [
-  "Magistério Primário de Cazengo",
-  "Escola Primária Nº 105",
-  "Complexo Escolar 4 de Fevereiro",
-  "Escola Secundária de N'dalatando",
-  "Instituto Médio Politécnico do Cuanza Norte"
-];
+import { userAuthUser } from '../hooks/userAuth';
+import api from '../services/api';
 
 const NOTIFICATIONS_MOCK = [
   {
@@ -30,57 +24,67 @@ const NOTIFICATIONS_MOCK = [
   }
 ];
 
-const INITIAL_USER = {
-  nomeCompleto: "Osvaldo Pedro",
-  email: "pedroosvaldo187@gmail.com",
-  telefone: "+244 9XX XXX XXX",
-  tipoUtilizador: "Professor(a)",
-  escola: "Magistério Primário de Cazengo",
-  sobreMim: "Sou professor do ensino primário, leciono as disciplinas de matemática e educação musical."
-};
-
 function Profile() {
+
+  //lista de escolas
+  const[schools, setSchools] = useState([]);
+
+  useEffect(() => {
+    const loadSchools = async () => {
+      try {
+            const response = await api.get('/Cazengo-Educa/api/escolas/ativas');
+
+            setSchools(response.data);
+
+      } catch (error) {
+        showToast("Erro ao listar escolas!", "error");
+      }
+    }
+
+    loadSchools();
+
+  }, []);
+
+  const { user } = userAuthUser();
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
   
   const [formData, setFormData] = useState({
-    nomeCompleto: INITIAL_USER.nomeCompleto,
-    telefone: INITIAL_USER.telefone,
-    escola: INITIAL_USER.escola,
-    sobreMim: INITIAL_USER.sobreMim
+    name: user.name,
+    school_id : user.school_id
   });
 
   const handleInputChange = (e) => {
+    
     const { name, value } = e.target;
+    
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSaveChanges = () => {
-    // Ativa o Toast (mensagem de sucesso)
+    
     setShowToast(true);
+    
     setTimeout(() => setShowToast(false), 4000);
-    console.log("Dados guardados!");
+    
   };
 
-  const inputStyle = "w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none";
+  //terminar sessao
+  const handleLogout = () => {
+
+    //limpar os dados sensíveis do navegador
+    localStorage.removeItem('@CazengoEduca:user');
+    try {
+          navigate('/login', { replace: true});
+    } catch (error) {
+      showToast("Erro ao terminar sessão!");
+    }
+  }
+
   const disabledStyle = "bg-slate-50 text-slate-500 cursor-not-allowed border-slate-100";
-  const labelStyle = "block text-sm font-bold text-slate-900 mb-2 pl-1";
 
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6 relative overflow-x-hidden">
-      
-      {/* --- TOAST NOTIFICATION --- */}
-      <div className={`fixed top-10 right-1/2 translate-x-1/2 md:translate-x-0 md:right-10 z-[100] transition-all duration-500 transform ${showToast ? 'translate-y-0 opacity-100' : '-translate-y-20 opacity-0 pointer-events-none'}`}>
-        <div className="bg-slate-900 text-white px-6 py-4 rounded-3xl shadow-2xl flex items-center gap-4 border border-slate-700">
-          <div className="bg-green-500 p-2 rounded-full">
-            <CheckCircle size={20} className="text-white" />
-          </div>
-          <div>
-            <p className="font-black text-sm">Perfil Atualizado!</p>
-            <p className="text-slate-400 text-xs">As tuas alterações foram salvas com sucesso.</p>
-          </div>
-        </div>
-      </div>
 
       <div className="container mx-auto max-w-3xl">
         <h1 className="text-3xl font-black text-slate-900 mb-10 pl-2">O Meu Perfil</h1>
@@ -91,13 +95,13 @@ function Profile() {
             <User className="text-green-300" size={56} strokeWidth={1.5} />
           </div>
           <div className="text-center md:text-left flex-grow">
-            <h2 className="text-2xl font-black text-slate-950">{formData.nomeCompleto}</h2>
-            <p className="text-slate-500 font-medium mt-1 mb-4">{INITIAL_USER.email}</p>
+            <h2 className="text-2xl font-black text-slate-950">{formData.name}</h2>
+            <p className="text-slate-500 font-medium mt-1 mb-4">{user.email}</p>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-bold border border-green-100">
-              <Briefcase size={14} /> {INITIAL_USER.tipoUtilizador}
+              <User size={14} /> {user.type_user}
             </span>
           </div>
-          <button onClick={() => navigate('/login')} className="shrink-0 flex items-center gap-2 text-slate-400 hover:text-red-500 transition-colors p-3 rounded-xl hover:bg-red-50">
+          <button onClick={handleLogout} className="shrink-0 flex items-center gap-2 text-slate-400 hover:text-red-500 transition-colors p-3 rounded-xl hover:bg-red-50">
              <LogOut size={20} /> Sair
           </button>
         </div>
@@ -133,45 +137,38 @@ function Profile() {
           
           <div className="space-y-6">
             <div>
-              <label className={labelStyle}>Nome completo</label>
+              <label className="block text-sm font-bold text-slate-900 mb-2 pl-1">Nome completo</label>
               <div className="relative">
                 <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
-                <input name="nomeCompleto" type="text" value={formData.nomeCompleto} onChange={handleInputChange} className={`${inputStyle} pl-14`} />
+                <input name="nomeCompleto" type="text" value={formData.name} onChange={handleInputChange} className="w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14"/>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label className={labelStyle}>E-mail</label>
+                    <label className="block text-sm font-bold text-slate-900 mb-2 pl-1">E-mail</label>
                     <div className="relative">
                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
-                        <input type="text" value={INITIAL_USER.email} disabled className={`${inputStyle} pl-14 ${disabledStyle}`} />
-                    </div>
-                </div>
-                <div>
-                    <label className={labelStyle}>Telefone / WhatsApp</label>
-                    <div className="relative">
-                        <Phone className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
-                        <input name="telefone" type="text" value={formData.telefone} onChange={handleInputChange} className={`${inputStyle} pl-14`} />
+                        <input type="text" value={user.email} disabled className={`w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14 ${disabledStyle}`} />
                     </div>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label className={labelStyle}>Tipo de Perfil</label>
+                    <label className="block text-sm font-bold text-slate-900 mb-2 pl-1">Perfil</label>
                     <div className="relative">
                         <Briefcase className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
-                        <input type="text" value={INITIAL_USER.tipoUtilizador} disabled className={`${inputStyle} pl-14 ${disabledStyle}`} />
+                        <input type="text" value={user.type_user} disabled className={`w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14 ${disabledStyle}`} />
                     </div>
                 </div>
                 <div>
-                    <label className={labelStyle}>Escola / Instituição</label>
+                    <label className="block text-sm font-bold text-slate-900 mb-2 pl-1">Escola / Instituição</label>
                     <div className="relative">
                         <School className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
-                        <select name="escola" value={formData.escola} onChange={handleInputChange} className={`${inputStyle} pl-14 pr-12`}>
-                            {SCHOOLS_MOCK.map(school => (
-                                <option key={school} value={school}>{school}</option>
+                        <select value={formData.school_id} onChange={handleInputChange} className={`w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14 pr-12`}>
+                            {schools.map(school => (
+                                <option key={school.idschool} value={school.idschool}>{school.name}</option>
                             ))}
                         </select>
                         <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={20} />
@@ -179,10 +176,6 @@ function Profile() {
                 </div>
             </div>
 
-            <div>
-              <label className={labelStyle}>Sobre mim</label>
-              <textarea name="sobreMim" value={formData.sobreMim} onChange={handleInputChange} rows="4" className={`${inputStyle} resize-none py-4`} />
-            </div>
           </div>
 
           <div className="mt-12 pt-8 border-t border-slate-50 flex justify-end">
@@ -192,6 +185,20 @@ function Profile() {
           </div>
         </div>
       </div>
+
+      {/* --- TOAST NOTIFICATION --- */}
+      <div className={`fixed top-10 right-1/2 translate-x-1/2 md:translate-x-0 md:right-10 z-[100] transition-all duration-500 transform ${showToast ? 'translate-y-0 opacity-100' : '-translate-y-20 opacity-0 pointer-events-none'}`}>
+        <div className="bg-slate-900 text-white px-6 py-4 rounded-3xl shadow-2xl flex items-center gap-4 border border-slate-700">
+          <div className="bg-green-500 p-2 rounded-full">
+            <CheckCircle size={20} className="text-white" />
+          </div>
+          <div>
+            <p className="font-black text-sm">Perfil Atualizado!</p>
+            <p className="text-slate-400 text-xs">As tuas alterações foram salvas com sucesso.</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }

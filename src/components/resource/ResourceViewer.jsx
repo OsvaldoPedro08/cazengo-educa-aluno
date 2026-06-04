@@ -187,6 +187,9 @@ function ResourceViewer() {
             <span className="text-slate-300 hidden sm:inline">|</span>
             <Calendar size={14} className="ml-1 sm:ml-0" />
             <span>{resource.dtregister ? new Date(resource.dtregister).toLocaleDateString('pt-PT') : 'Recente'}</span>
+            <p className="text-xs md:text-sm text-slate-600 break-words leading-normal text-justify line-clamp-5">
+              {resource.description}
+            </p>
           </div>
         </div>
 

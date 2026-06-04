@@ -46,6 +46,7 @@ function Profile() {
   }, []);
 
   const { user } = userAuthUser();
+  
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
   

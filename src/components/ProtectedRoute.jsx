@@ -34,13 +34,10 @@ export function ProtectedRoute({ allowedRoles }) {
 
                     setTimeout(() => <Navigate to="/" replace />, 1000);
                     
-                    //return <Navigate to="/" replace />;
+                    
                 }
         } catch (error) {
             return <Navigate to="/" replace />;
         }
     }
-
-    //se passou todas as validações renderiza a rota dashboard
-    return <Outlet />;
 }

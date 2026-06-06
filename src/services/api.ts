@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
+    //baseURL: "http://localhost:8080"
     baseURL:'https://cazengo-educa-api.onrender.com',
-    withCredentials: true
+    //withCredentials: true
 });
 
 //==========================

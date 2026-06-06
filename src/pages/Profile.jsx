@@ -7,22 +7,7 @@ import {
 import { userAuthUser } from '../hooks/userAuth';
 import api from '../services/api';
 
-const NOTIFICATIONS_MOCK = [
-  {
-    id: 1,
-    title: "Recurso Aprovado",
-    message: "O seu manual de 'Matemática 4ª Classe' foi verificado e já está disponível para todos.",
-    status: "approved",
-    date: "Hoje, 10:30"
-  },
-  {
-    id: 2,
-    title: "Em Revisão",
-    message: "O vídeo 'Cânticos Tradicionais de Cuanza Norte' está a ser analisado pela moderação.",
-    status: "pending",
-    date: "Ontem, 16:45"
-  }
-];
+const NOTIFICATIONS_MOCK = [];
 
 function Profile() {
 
@@ -75,6 +60,7 @@ function Profile() {
 
     //limpar os dados sensíveis do navegador
     localStorage.removeItem('@CazengoEduca:user');
+    localStorage.removeItem("token");
     try {
           navigate('/login', { replace: true});
     } catch (error) {

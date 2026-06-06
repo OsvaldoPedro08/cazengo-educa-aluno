@@ -306,7 +306,7 @@ function ResourceViewer() {
                         <span className="font-bold text-slate-800 text-xs">{comment.username} - {comment.type_user}</span>
                         <span className="text-[9px] text-slate-400 font-bold uppercase">{comment.createdAt ? formatTimeAgo(comment.createdAt) : 'Recente'}</span>
                       </div>
-                      <p className="text-slate-600 text-xs bg-slate-50/50 p-4 rounded-2xl border">{comment.comment}</p>
+                      <p className="text-slate-600 text-xs bg-slate-50/50 p-4 rounded-2xl break-words border">{comment.comment}</p>
                     </div>
                   </div>
                 ))}

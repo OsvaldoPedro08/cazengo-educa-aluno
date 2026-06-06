@@ -5,6 +5,10 @@ import api from '../services/api';
 
 function Login() {
   
+  //remove o usuario do localStorage
+  //localStorage.removeItem('@CazengoEduca:user');
+  //localStorage.removeItem("token");
+
   const navigate = useNavigate();
   
   // Lista as escolas para o select do cadastro
@@ -276,7 +280,7 @@ function Login() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1 block">Password</label>
+                <label className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1 block">Palavra-passe</label>
                 <input 
                   required
                   type="password"
@@ -288,7 +292,7 @@ function Login() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1 block">Meu Perfil</label>
+                <label className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1 block">Perfil</label>
                 <select 
                   required
                   value={formData.type_user}

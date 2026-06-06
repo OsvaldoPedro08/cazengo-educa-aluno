@@ -18,6 +18,8 @@ function Navbar() {
 
     //limpar os dados do usuario sensíveis do navegador
     localStorage.removeItem('@CazengoEduca:user');
+    localStorage.removeItem('token');
+    
     try {
           navigate('/login', { replace: true});
     } catch (error) {
@@ -71,9 +73,9 @@ function Navbar() {
                 </div>
                 
                 <div>
-                  <button onClick={handleLogout} className="text-red-400 hover:text-red-300 transition-colors p-2 rounded-lg hover:bg-red-400/10">
+                  <Link to="/login" className=" text-red-400 hover:text-red-300 transition-colors px-6 py-2.5 rounded-xl flex items-center hover:bg-red-400/10">
                     <LogOut className="w-5 h-5" />
-                  </button>
+                  </Link>
                 </div>
                 
               </div>

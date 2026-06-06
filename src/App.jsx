@@ -22,7 +22,7 @@ function App() {
   return(
     <div>
       {/* Navbar aparece sempre, exceto na pagina de login */}
-      {!isLoginPage && <Navbar user={user} setUser={setUser} />}
+      {!isLoginPage && <Navbar user={user} />}
 
         {/* Area do conteudo dinamico*/}
       <main>
@@ -33,13 +33,14 @@ function App() {
           <Route path="/" element={<Home isLoggedIn={!!user} />} />
 
           {/* Mostra o botao de perfil com o nome apenas quando o usuario faz login */}
-          <Route path="/perfil" element={user ? <Profile user={user} setUser={setUser} /> : <Navigate to="/login" replace/>} />
+          <Route path="/perfil" element={!!user && (<Profile user={user} />) } />
 
           {/* Rotas mostradas em todos usuarios */}
           <Route path="/explorar" element={<Explore />} />
           
           {/* ROTA DE PARTILHAR RECURSO PROTEGIDA */}
           <Route path="/partilhar-recurso" element={<Publish />} />
+          
           <Route path="/licencas" element={<Licenses />} />
           <Route path="/sobre" element={<About />} />
           <Route path="/recurso/:id" element={<ResourceViewer />} />

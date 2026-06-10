@@ -213,12 +213,21 @@ function Explore() {
             </button>
             <button
               onClick={() => {
+                setActiveType("ARTIGO_CIENTIFICO");
+                setActiveCategory("todas");
+              }}
+              className='px-6 py-2 rounded-full text-sm font-bold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200'
+            >
+              Artigos Científicos
+            </button>
+            <button
+              onClick={() => {
                 setActiveType("PLANO_AULA");
                 setActiveCategory("todas");
               }}
               className='px-6 py-2 rounded-full text-sm font-bold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200'
             >
-              Planos de Aula
+              Planos de Aulas
             </button>
             <button
               onClick={() => {
@@ -244,7 +253,7 @@ function Explore() {
           </div>
 
           {/* Seletor do Nível de Ensino */}
-          {activeType !== "LEI_NORMATIVO" && activeType !== "PLANO_AULA" && (
+          {activeType !== "LEI_NORMATIVO" && activeType !== "PLANO_AULA" && activeType !== "ARTIGO_CIENTIFICO" && (
             <div className="relative">
             <label className='text-md font-medium text-slate-500'>Filtrar por Níveis de Ensino</label>
             <select 

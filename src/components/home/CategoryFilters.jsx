@@ -8,11 +8,15 @@ function CategoryFilters() {
   const navigate = useNavigate();
 
   const [levels, setLevels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   //lista os niveis de ensino
   useEffect(() => {
+
     const fetchLevels = async () => {
       try {
+            setLoading(true);
+
             const response = await api.get('/Cazengo-Educa/api/nivel_ensino/ativo');
 
             setLevels(response.data);
@@ -20,7 +24,10 @@ function CategoryFilters() {
       } catch (error) {
         showToast("Erro ao conectar com o servidor!")
       }
-    };
+      finally {
+        setLoading(false);
+      }
+    }
 
     fetchLevels();
 
@@ -47,26 +54,40 @@ function CategoryFilters() {
 
         {/* Grid de Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {levels.map((level) => (
-            <button
-              key={level.idlevel}
-              onClick={() => handleCategoryClick(level.slug)}
-              className={`group p-8 rounded-3xl border-2 border-slate-100 bg-white transition-all duration-300 text-center flex flex-col items-center hover:shadow-xl hover:-translate-y-1 hover:border-orange-400`}
-            >
-              <div className={`w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110`}>
-                <BookText className={`w-8 h-8 text-orange-500`} />
+          {loading ? (
+              <div className="p-20 text-center text-slate-400 flex flex-col items-center justify-center">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
+                <p className="font-bold">A carregar os níveis de ensino...</p>
               </div>
+            ) : levels.length > 0 ? (
+            <div>
+              {levels.map((level) => (
+                <button
+                  key={level.idlevel}
+                  onClick={() => handleCategoryClick(level.slug)}
+                  className={`group p-8 rounded-3xl border-2 border-slate-100 bg-white transition-all duration-300 text-center flex flex-col items-center hover:shadow-xl hover:-translate-y-1 hover:border-orange-400`}
+                >
+                  <div className={`w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110`}>
+                    <BookText className={`w-8 h-8 text-orange-500`} />
+                  </div>
 
-              <h3 className="text-xl font-bold text-slate-800 mb-2">
-                {level.name}
-              </h3>
-              
-              <p className="text-slate-400 text-sm leading-relaxed">
-                {level.description}
-              </p>
-
-            </button>
-          ))}
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">
+                    {level.name}
+                  </h3>
+                  
+                  <p className="text-slate-400 text-sm leading-relaxed">
+                    {level.description}
+                  </p>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="p-20 text-center text-slate-400">
+              <Search size={48} className="mx-auto mb-4 opacity-20" />
+              <p className="font-bold">Nenhum nível de ensino encontrado</p>
+          </div>
+          )}
+          
         </div>
 
       </div>

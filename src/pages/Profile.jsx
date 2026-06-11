@@ -69,7 +69,15 @@ function Profile(props) {
   const disabledStyle = "bg-slate-50 text-slate-500 cursor-not-allowed border-slate-100";
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6 relative overflow-x-hidden">
+
+    <div>
+      {!props.user ? (
+          <div className="p-20 text-center text-slate-400 flex flex-col items-center justify-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
+            <p className="font-bold">A carregar dados do perfil...</p>
+          </div>
+        ) : (
+          <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6 relative overflow-x-hidden">
 
       <div className="container mx-auto max-w-3xl">
         <h1 className="text-3xl font-black text-slate-900 mb-10 pl-2">O Meu Perfil</h1>
@@ -185,6 +193,10 @@ function Profile(props) {
       </div>
 
     </div>
+        )
+      }
+    </div>
+    
   );
 }
 

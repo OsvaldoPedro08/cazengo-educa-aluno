@@ -11,16 +11,8 @@ const NOTIFICATIONS_MOCK = [];
 
 function Profile(props) {
 
-  const navigate = useNavigate();
-  const [showToast, setShowToast] = useState(false);
-
   //lista de escolas
   const[schools, setSchools] = useState([]);
-
-  const [formData, setFormData] = useState({
-    name: props.user.name,
-    school_id : props.user.school_id
-  });
 
   useEffect(() => {
     const loadSchools = async () => {
@@ -37,6 +29,14 @@ function Profile(props) {
     loadSchools();
 
   }, []);
+  
+  const navigate = useNavigate();
+  const [showToast, setShowToast] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    name: props.user.name,
+    school_id : props.user.school_id
+  });
 
   const handleInputChange = (e) => {
     
@@ -69,15 +69,7 @@ function Profile(props) {
   const disabledStyle = "bg-slate-50 text-slate-500 cursor-not-allowed border-slate-100";
 
   return (
-
-    <div>
-      {!props.user ? (
-          <div className="p-20 text-center text-slate-400 flex flex-col items-center justify-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
-            <p className="font-bold">A carregar dados do perfil...</p>
-          </div>
-        ) : (
-          <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6 relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-6 relative overflow-x-hidden">
 
       <div className="container mx-auto max-w-3xl">
         <h1 className="text-3xl font-black text-slate-900 mb-10 pl-2">O Meu Perfil</h1>
@@ -193,10 +185,6 @@ function Profile(props) {
       </div>
 
     </div>
-        )
-      }
-    </div>
-    
   );
 }
 

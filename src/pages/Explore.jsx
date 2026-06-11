@@ -35,7 +35,7 @@ function Explore() {
 
   // Estados dos recursos
   const [resources, setResources] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   //estados da classe e disciplina
   const [grade, setGrade] = useState("");

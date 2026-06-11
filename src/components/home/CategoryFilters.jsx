@@ -85,7 +85,7 @@ function CategoryFilters() {
             <div className="p-20 text-center text-slate-400">
               <Search size={48} className="mx-auto mb-4 opacity-20" />
               <p className="font-bold">Nenhum nível de ensino encontrado</p>
-          </div>
+            </div>
           )}
           
         </div>

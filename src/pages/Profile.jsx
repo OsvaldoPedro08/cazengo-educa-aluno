@@ -11,8 +11,16 @@ const NOTIFICATIONS_MOCK = [];
 
 function Profile(props) {
 
+  const navigate = useNavigate();
+  const [showToast, setShowToast] = useState(false);
+
   //lista de escolas
   const[schools, setSchools] = useState([]);
+
+  const [formData, setFormData] = useState({
+    name: props.user.name,
+    school_id : props.user.school_id
+  });
 
   useEffect(() => {
     const loadSchools = async () => {
@@ -29,14 +37,6 @@ function Profile(props) {
     loadSchools();
 
   }, []);
-  
-  const navigate = useNavigate();
-  const [showToast, setShowToast] = useState(false);
-  
-  const [formData, setFormData] = useState({
-    name: props.user.name,
-    school_id : props.user.school_id
-  });
 
   const handleInputChange = (e) => {
     

@@ -53,14 +53,14 @@ function CategoryFilters() {
         </div>
 
         {/* Grid de Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div>
           {loading ? (
               <div className="p-20 text-center text-slate-400 flex flex-col items-center justify-center">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
                 <p className="font-bold">A carregar os níveis de ensino...</p>
               </div>
             ) : levels.length > 0 ? (
-            <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {levels.map((level) => (
                 <button
                   key={level.idlevel}

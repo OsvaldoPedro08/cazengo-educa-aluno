@@ -9,10 +9,10 @@ import api from '../services/api';
 
 const NOTIFICATIONS_MOCK = [];
 
-function Profile(props) {
+function Profile({ user }) {
 
   //mostra o carregamento enquanto o react busca os dados do usuario logado
-  if(!props.user || props.user === null) {
+  if(!user || user === null) {
     return (
       <div className="p-20 text-center text-slate-400 flex flex-col items-center justify-center">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600 mb-4"></div>
@@ -44,8 +44,8 @@ function Profile(props) {
   const [showToast, setShowToast] = useState(false);
   
   const [formData, setFormData] = useState({
-    name: props.user.name,
-    school_id : props.user.school_id
+    name: user.name,
+    school_id : user.school_id
   });
 
   const handleInputChange = (e) => {
@@ -91,9 +91,9 @@ function Profile(props) {
           </div>
           <div className="text-center md:text-left flex-grow">
             <h2 className="text-2xl font-black text-slate-950">{formData.name}</h2>
-            <p className="text-slate-500 font-medium mt-1 mb-4">{props.user.email}</p>
+            <p className="text-slate-500 font-medium mt-1 mb-4">{user.email}</p>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-bold border border-green-100">
-              <User size={14} /> {props.user.type_user}
+              <User size={14} /> {user.type_user}
             </span>
           </div>
           <button onClick={handleLogout} className="shrink-0 flex items-center gap-2 text-slate-400 hover:text-red-500 transition-colors p-3 rounded-xl hover:bg-red-50">
@@ -144,7 +144,7 @@ function Profile(props) {
                     <label className="block text-sm font-bold text-slate-900 mb-2 pl-1">E-mail</label>
                     <div className="relative">
                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
-                        <input type="text" value={props.user.email} disabled className={`w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14 ${disabledStyle}`} />
+                        <input type="text" value={user.email} disabled className={`w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14 ${disabledStyle}`} />
                     </div>
                 </div>
             </div>
@@ -154,7 +154,7 @@ function Profile(props) {
                     <label className="block text-sm font-bold text-slate-900 mb-2 pl-1">Perfil</label>
                     <div className="relative">
                         <Briefcase className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
-                        <input type="text" value={props.user.type_user} disabled className={`w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14 ${disabledStyle}`} />
+                        <input type="text" value={user.type_user} disabled className={`w-full px-5 py-3.5 bg-white border border-slate-100 rounded-2xl text-slate-800 focus:border-green-300 focus:ring-green-100 focus:ring-2 outline-none transition-all appearance-none pl-14 ${disabledStyle}`} />
                     </div>
                 </div>
                 <div>

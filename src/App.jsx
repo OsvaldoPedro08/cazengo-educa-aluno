@@ -33,7 +33,7 @@ function App() {
           <Route path="/" element={<Home isLoggedIn={!!user} />} />
 
           {/* Mostra o botao de perfil com o nome apenas quando o usuario faz login */}
-          <Route path="/perfil" element={!!user && (<Profile user={user} />) } />
+          <Route path="/perfil" element={user ? <Profile user={user} /> : <Navigate to="/login" />} />
 
           {/* Rotas mostradas em todos usuarios */}
           <Route path="/explorar" element={<Explore />} />

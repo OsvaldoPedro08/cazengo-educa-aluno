@@ -24,7 +24,6 @@ function App() {
       {/* Navbar aparece sempre, exceto na pagina de login */}
       {!isLoginPage && <Navbar user={user} />}
 
-        {/* Area do conteudo dinamico*/}
       <main>
         <Routes>
           <Route path="/login" element={<Login onLogin={setUser} />} />
@@ -33,7 +32,7 @@ function App() {
           <Route path="/" element={<Home isLoggedIn={!!user} />} />
 
           {/* Mostra o botao de perfil com o nome apenas quando o usuario faz login */}
-          <Route path="/perfil" element={user ? <Profile user={user} /> : <Navigate to="/login" />} />
+          <Route path="/perfil" element={user ? <Profile user={user} /> : <Navigate to="/" />} />
 
           {/* Rotas mostradas em todos usuarios */}
           <Route path="/explorar" element={<Explore />} />

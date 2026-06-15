@@ -35,6 +35,7 @@ export function Publish() {
     license_id: "",
     licenseName: "",
     level_id: "",
+    type_document: "",
   });
 
   //lista as licenças
@@ -93,9 +94,10 @@ export function Publish() {
     
     if (selectedFile) {
     
-      if (selectedFile.size > 50 * 1024 * 1024) {
+      //LIMITE DE 10MB (DEPOIS DE ARRAJNAR O UPLOAD_STREAM, COLOCAR O LIMITE EM ATÉ 50 (50MB))
+      if (selectedFile.size > 10 * 1024 * 1024) {
     
-        showToast("O arquivo excede o limite de 50MB!");
+        showToast("O arquivo excede o limite de 10MB!");
         return;
     
       }
@@ -145,9 +147,10 @@ export function Publish() {
     data.append("subject", formData.subject);
     data.append("grade", formData.grade);
     data.append("license_id", formData.license_id);
-    data.append("user_id", user.id); // depois trocar para formData.user_id quando estiver logado
+    data.append("user_id", user.id);
     data.append("level_id", formData.level_id);
     data.append("status", formData.status || "PENDENTE");
+    data.append("type_document", formData.type_document);
 
     //busca o nome da licença
     const selectedLic = licenses?.find(lic => lic.idlicense === Number(formData.license_id));
@@ -217,7 +220,23 @@ export function Publish() {
           <form onSubmit={handleSubmit} className="space-y-6">
             
             <div className="flex flex-col gap-2">
-              <label className="text-slate-700 font-bold text-sm ml-1">Título do Recurso*</label>
+              <label className="text-slate-700 font-bold text-sm ml-1">Tipo de Recurso<span className='text-red-600'>*</span></label>
+              <select
+                required
+                value={formData.type_document}
+                onChange={e => setFormData({...formData, type_document: e.target.value})}
+                className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none bg-white"
+              >
+                <option value="LIVRO">Livro / Manual</option>
+                <option value="VIDEO">Vídeo</option>
+                <option value="PLANO_AULA">Plano de Aula</option>
+                <option value="LEI_NORMATIVO">Normativo / Lei / Circular</option>
+                <option value="ARTIGO_CIENTIFICO">Artigo Científico</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-slate-700 font-bold text-sm ml-1">Título do Recurso<span className='text-red-600'>*</span></label>
               <input
                required
                value={formData.title}
@@ -227,56 +246,73 @@ export function Publish() {
                className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none" />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-slate-700 font-bold text-sm ml-1">Descrição do Conteúdo</label>
-              <textarea
-                value={formData.description}
-                onChange={e => setFormData({...formData, description: e.target.value})}
-                placeholder="Descreva brevemente o conteúdo e objectivo do recurso..."
-                className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none h-24 resize-none">
-              </textarea>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-slate-700 font-bold text-sm ml-1">Nível de Ensino</label>
-              <select
-                required
-                value={formData.level_id}
-                onChange={e => setFormData({...formData, level_id: e.target.value})}
-                className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none bg-white"
-              >
-                <option value="">Selecionar Nível</option>
-                {levels.map((le) => (
-                  <option key={le.idlevel} value={le.idlevel}>{le.name}</option>
-                ))}
-              </select>
-            </div>
+            {/* NAO MOSTRA A DESCRICAO SE O TIPO FOR LEI_NORMATIVO E PLANO_AULA */}
+            {formData.type_document !== 'LEI_NORMATIVO' && formData.type_document !== 'PLANO_AULA' 
+              && (
+                  <div className="flex flex-col gap-2">
+                    <label className="text-slate-700 font-bold text-sm ml-1">Descrição do Conteúdo</label>
+                    <textarea
+                      value={formData.description}
+                      onChange={e => setFormData({...formData, description: e.target.value})}
+                      placeholder="Descreva brevemente o conteúdo e objectivo do recurso..."
+                      className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none h-24 resize-none">
+                    </textarea>
+                  </div>
+              )
+            }
+            
+            {/* NAO MOSTRA O NIVEL, SE O TIPO FOR LEI_NORMATIVO, PLANO_AULA E ARTIGO_CIENTIFICO */}
+            {formData.type_document !== 'LEI_NORMATIVO' && formData.type_document !== 'PLANO_AULA' 
+              && formData.type_document !== 'ARTIGO_CIENTIFICO' && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-slate-700 font-bold text-sm ml-1">Nível de Ensino</label>
+                  <select
+                    value={formData.level_id}
+                    onChange={e => setFormData({...formData, level_id: e.target.value})}
+                    className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none bg-white"
+                  >
+                    <option value="">Selecionar Nível</option>
+                    {levels.map((le) => (
+                      <option key={le.idlevel} value={le.idlevel}>{le.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )
+            }
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               
-              <div className="flex flex-col gap-2">
-                <label className="text-slate-700 font-bold text-sm ml-1">Disciplina</label>
-                <input 
-                  required
-                  value={formData.subject}
-                  onChange={e => setFormData({...formData, subject: e.target.value})}
-                  type="text"
-                  placeholder="Ex: Matemática"
-                  className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none" 
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-slate-700 font-bold text-sm ml-1">Classe / Ano</label>
-                <input 
-                  required
-                  value={formData.grade}
-                  onChange={e => setFormData({...formData, grade: e.target.value})} 
-                  type="text" 
-                  placeholder="Ex: 8ª Classe" 
-                  className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none" 
-                />
-              </div>
+              {/* NAO MOSTRA A DISCIPLINA, SE O TIPO FOR LEI_NORMATIVO E PLANO_AULA */}
+              {formData.type_document !== 'LEI_NORMATIVO' && formData.type_document !== 'PLANO_AULA' 
+                && (
+                    <div className="flex flex-col gap-2">
+                      <label className="text-slate-700 font-bold text-sm ml-1">Disciplina</label>
+                      <input 
+                        value={formData.subject}
+                        onChange={e => setFormData({...formData, subject: e.target.value})}
+                        type="text"
+                        placeholder="Ex: Matemática"
+                        className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none" 
+                      />
+                    </div>
+                )
+              }
+              
+              {/* NAO MOSTRA A CLASSE, SE O TIPO FOR LEI_NORMATIVO, PLANO_AULA E ARTIGO_CIENTIFCO */}
+              {formData.type_document !== 'LEI_NORMATIVO' && formData.type_document !== 'PLANO_AULA' 
+                && formData.type_document !== 'ARTIGO_CIENTIFICO' && (
+                  <div className="flex flex-col gap-2">
+                    <label className="text-slate-700 font-bold text-sm ml-1">Classe / Ano</label>
+                    <input
+                      value={formData.grade}
+                      onChange={e => setFormData({...formData, grade: e.target.value})} 
+                      type="text" 
+                      placeholder="Ex: 8ª Classe" 
+                      className="w-full border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 outline-none" 
+                    />
+                  </div>
+                )
+              }
 
             </div>
 
@@ -317,14 +353,14 @@ export function Publish() {
               <div className="flex flex-col gap-2">
                 <label className="text-slate-700 font-bold text-sm flex justify-between items-center">
                   Anexar Arquivo Principal
-                  <span className="text-[10px] text-slate-400">Limite Máx: 50MB</span>
+                  <span className="text-[10px] text-slate-400">Limite Máx: 10MB</span>
                 </label>
                 
                 <div className={`relative border-2 border-dashed rounded-2xl transition-all ${file ? 'border-green-300 bg-green-50/30' : 'border-slate-200 bg-slate-50 hover:border-green-400'}`}>
                   {!file ? (
                     <div className="py-10 flex flex-col items-center">
                       <Upload className="text-slate-300 w-10 h-10 mb-2" />
-                      <p className="text-slate-500 text-sm font-medium">Carregar material (PDF, DOCX, PPTX, MP4)</p>
+                      <p className="text-slate-500 text-sm font-medium">Carregar material (PDF e MP4)</p>
                       <input 
                         required
                         ref={fileInputRef}  
@@ -360,8 +396,9 @@ export function Publish() {
                 </div>
               </div>
 
-              {/* INPUT DE CAPA - MOSTRA APENAS SE FOR PDF/DOCUMENTO */}
-              {isNotVideo && file && (
+              {/* CAPA MOSTRADO APENAS SE FOR PDF E SE NAO FOR LEI_NORMATIVO E PLANO_AULA */}
+              {isNotVideo && formData.type_document !== 'LEI_NORMATIVO' 
+              && formData.type_document !== 'PLANO_AULA' && file && (
                 <div className="flex flex-col gap-2 animate-fade-in-up">
                   <label className="text-[10px] font-black text-slate-400 uppercase ml-4 block italic">Capa do Documento</label>
                   <div className="flex items-center gap-4 bg-slate-50 p-6 rounded-[2rem] border-2 border-dashed border-slate-200 hover:border-green-400 transition-all relative">
@@ -386,6 +423,7 @@ export function Publish() {
                   </div>
                 </div>
               )}
+
             </div>
 
             <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-lg shadow-green-600/20 transition-all hover:-translate-y-0.5">
